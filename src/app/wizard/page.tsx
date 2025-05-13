@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ExperimentContext from '../context/ExperimentContext';
-import StepIndicator from './StepIndicator';
 import BasicInfo from './steps/BasicInfo';
 import RandomizationSetup from './steps/RandomizationSetup';
 import SampleSizeCalculator from './steps/SampleSizeCalculator';
@@ -28,119 +27,154 @@ export default function ExperimentWizard() {
     variables: [],
     treatmentGroups: []
   });
-  
-  const nextStep = () => {
-    // Save the current form data before moving to the next step
-    const currentForm = document.querySelector('form');
-    if (currentForm) {
-      const submitEvent = new Event('submit', { cancelable: true, bubbles: true });
-      currentForm.dispatchEvent(submitEvent);
-    }
-    
-    // Move to next step
+
+  const goToNextStep = () => {
     setCurrentStep(prev => Math.min(prev + 1, steps.length - 1));
   };
-  
+
   const prevStep = () => setCurrentStep(prev => Math.max(prev - 1, 0));
-  
+
   const updateExperimentData = (newData) => {
     setExperimentData(prev => {
-      const updated = {...prev, ...newData};
+      const updated = { ...prev, ...newData };
       console.log("Updated experiment data:", updated);
       return updated;
     });
   };
-  
+
   const renderStepContent = () => {
-    switch(currentStep) {
-      case 0: return <BasicInfo />;
-      case 1: return <SampleSizeCalculator />;
-      case 2: return <RandomizationSetup />;
-      case 3: return <VariablesSetup />;
+    switch (currentStep) {
+      case 0: return <BasicInfo goToNext={goToNextStep} />;
+      case 1: return <SampleSizeCalculator goToNext={goToNextStep} />;
+      case 2: return <RandomizationSetup goToNext={goToNextStep} />;
+      case 3: return <VariablesSetup goToNext={goToNextStep} />;
       case 4: return <Review />;
       default: return null;
     }
   };
-  
-  // Debug: Log experiment data when it changes
+
   useEffect(() => {
     console.log("Experiment data updated:", experimentData);
   }, [experimentData]);
-  
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">
-            AI-Powered Experiment Creator
-          </h1>
-          <p className="mt-3 text-xl text-gray-500 sm:mt-4">
-            Design your experiment with intelligent guidance at every step
-          </p>
-        </div>
-        
-        <div className="bg-white rounded-xl shadow-xl overflow-hidden">
-          <div className="px-6 py-6 sm:px-10">
-            <StepIndicator steps={steps} currentStep={currentStep} />
-            
-            <ExperimentContext.Provider value={{ experimentData, updateExperimentData }}>
-              <div className="mt-10 mb-10 min-h-[400px]">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={currentStep}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    {renderStepContent()}
-                  </motion.div>
-                </AnimatePresence>
-              </div>
-              
-              <div className="mt-8 pt-5 border-t border-gray-200 flex justify-between">
-                <button 
-                  onClick={prevStep}
-                  disabled={currentStep === 0}
-                  className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-                  aria-label="Previous step"
-                >
-                  <svg className="mr-2 -ml-1 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                  </svg>
-                  Back
-                </button>
-                
-                {currentStep < steps.length - 1 ? (
-                  <button 
-                    onClick={nextStep}
-                    className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                    aria-label="Next step"
-                  >
-                    Continue
-                    <svg className="ml-2 -mr-1 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </button>
-                ) : (
-                  <button 
-                    onClick={() => alert('Experiment created!')}
-                    className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                    aria-label="Create experiment"
-                  >
-                    <svg className="mr-2 -ml-1 h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    Create Experiment
-                  </button>
-                )}
-              </div>
-            </ExperimentContext.Provider>
+    <div className="flex items-center justify-center overflow-hidden p-18">
+      <div className="w-full max-w-4xl px-4">
+        <div className="bg-[#10161fe8] rounded-lg p-5 border border-gray-800">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6">
+            <div>
+              <h1 className="text-2xl font-bold text-blue-400">
+                AI Experiment Creator
+              </h1>
+              <p className="text-sm text-gray-400 mt-1">
+                IDInsight Experiments Engine
+              </p>
+            </div>
+            <div className="mt-2 sm:mt-0 flex items-center">
+              <div className={`h-2 w-2 rounded-full ${currentStep === steps.length - 1 ? 'bg-green-500' : 'bg-blue-500'} mr-2`}></div>
+              <span className="text-sm font-medium text-blue-300">
+                {steps[currentStep].name}
+                <span className="ml-2 text-xs font-normal text-gray-400">
+                  Step {currentStep + 1} of {steps.length}
+                </span>
+              </span>
+            </div>
           </div>
-        </div>
-        
-        <div className="mt-8 text-center text-sm text-gray-500">
-          Powered by AI to make experiment design accessible for everyone
+          {/* Enhanced Step Indicators */}
+          <div className="mb-18 ml-18">
+            <div className="flex items-center">
+              {steps.map((step, index) => (
+                <div key={step.id} className="flex items-center w-full">
+                  {/* Step and connector */}
+                  <div className="relative flex flex-col items-center">
+                    {/* Step circle */}
+                    <div
+                      className={`flex items-center justify-center w-8 h-8 rounded-full border-2 ${index < currentStep
+                          ? 'bg-blue-600 border-blue-600 text-white'
+                          : index === currentStep
+                            ? 'bg-blue-900 border-blue-500 text-blue-300'
+                            : 'bg-gray-800 border-gray-700 text-gray-500'
+                        }`}
+                    >
+                      {index < currentStep ? (
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"></path>
+                        </svg>
+                      ) : (
+                        <span className="text-xs font-semibold">{index + 1}</span>
+                      )}
+                    </div>
+
+                    {/* Step Label */}
+                    <div className="absolute mt-10 text-center w-[120px]">
+                      <span className={`text-xs  ${index <= currentStep ? 'text-blue-400' : 'text-gray-500'
+                        }`}>
+                        {step.name}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Connector Line */}
+                  {index < steps.length - 1 && (
+                    <div className={`flex-auto border-t-2 ${index < currentStep ? 'border-blue-600' : 'border-gray-700'
+                      }`}></div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <ExperimentContext.Provider value={{ experimentData, updateExperimentData }}>
+            <div className=" overflow-y-auto pr-2 pb-2">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentStep}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {renderStepContent()}
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            <div className="mt-4 pt-4 border-t border-gray-800 flex justify-between">
+              <button
+                onClick={prevStep}
+                disabled={currentStep === 0}
+                className="flex items-center justify-center px-3 py-1.5 border border-gray-700 rounded-md text-gray-300 bg-gray-900 hover:bg-gray-800 focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                aria-label="Previous step"
+              >
+                <svg className="h-4 w-4 inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+                <span className="sr-only">Back</span>
+              </button>
+
+              {currentStep < steps.length - 1 ? (
+                <button
+                  type="submit"
+                  form={`${steps[currentStep].id}-form`}
+                  className="px-3 py-1.5 rounded-md text-white bg-blue-500 hover:bg-blue-800 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  aria-label="Continue to next step"
+                >
+                  Next
+                  <svg className="ml-1 h-4 w-4 inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              ) : (
+                <button
+                  onClick={() => alert('Experiment created!')}
+                  className="px-3 py-1.5 rounded-md text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-1 focus:ring-green-500"
+                  aria-label="Create experiment"
+                >
+                  Create
+                </button>
+              )}
+            </div>
+          </ExperimentContext.Provider>
         </div>
       </div>
     </div>

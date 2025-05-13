@@ -5,13 +5,12 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import 'dotenv/config'; // Auto-loads the .env file from the project root
 
 const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY || 'YOUR_API_KEY_HERE');
-console.log(process.env.NEXT_PUBLIC_GEMINI_API_KEY)
 
 
 async function getGeminiResponse(prompt: string) {
   try {
     // For text-only input, use the gemini-pro model
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     
     const result = await model.generateContent(prompt);
     const response = await result.response;
@@ -156,7 +155,7 @@ export const getVariableSuggestions = async (experimentType: string, domain: str
 
 export const getExperimentTitleSuggestions = async (domain: string, focus: string) => {
   const defaultSuggestions = [
-    `Impact of Intervention on ${focus} in ${domain}`,
+    `api calls failed`,
     `Evaluating ${focus} Methods in ${domain} Settings`, 
     `${domain} ${focus} Improvement Study`
   ];
@@ -168,6 +167,7 @@ export const getExperimentTitleSuggestions = async (domain: string, focus: strin
   `;
   
   try {
+    console.log("called called called")
     const response = await getGeminiResponse(prompt);
     
     if (response) {
