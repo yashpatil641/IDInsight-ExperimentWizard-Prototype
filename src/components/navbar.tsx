@@ -28,10 +28,10 @@ export default function Navbar() {
     <nav className="sticky top-4 z-50 mx-auto max-w-6xl px-4">
       <div className="bg-gray-900/80  backdrop-blur-md rounded-xl border border-slate-700">
         <div className="mx-auto px-5 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
+          <div className="flex items-center justify-between h-14">
             <div className="flex items-center">
               <Link href="/" className="flex-shrink-0 flex items-center group">
-                <span className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-blue-600 hover:from-sky-500 hover:to-blue-700 transition-all duration-300">
+                <span className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-blue-600 hover:from-sky-500 hover:to-blue-700 transition-all duration-300">
                   Experiment Wizard
                 </span>
               </Link>
@@ -40,7 +40,7 @@ export default function Navbar() {
             <div className="hidden md:flex items-center space-x-5 lg:space-x-6">
               <Link 
                 href="/" 
-                className={`text-gray-300 hover:text-sky-400 transition-colors duration-300 px-3 py-1.5 rounded-md text-base font-semibold ${
+                className={`text-gray-300 hover:text-sky-400 transition-colors duration-300 px-3 py-1.5 rounded-md text-sm font-semibold ${
                   pathname === '/' ? 'text-sky-400' : ''
                 }`}
               >
@@ -48,7 +48,7 @@ export default function Navbar() {
               </Link>
               <Link 
                 href="/wizard" 
-                className={`text-gray-300 hover:text-sky-400 transition-colors duration-300 px-3 py-1.5 rounded-md text-base font-semibold ${
+                className={`text-gray-300 hover:text-sky-400 transition-colors duration-300 px-3 py-1.5 rounded-md text-sm font-semibold ${
                   pathname === '/wizard' ? 'text-sky-400' : ''
                 }`}
               >
