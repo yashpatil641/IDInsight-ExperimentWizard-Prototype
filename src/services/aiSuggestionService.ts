@@ -4,7 +4,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 // You'll need to get an API key from https://makersuite.google.com/app/apikey
 import 'dotenv/config'; // Auto-loads the .env file from the project root
 
-const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY || 'YOUR_API_KEY_HERE');
+const genAI = new GoogleGenerativeAI("AIzaSyDBDYTy0RwdKxH5oHYe0wzEwsAiMVyH44g");
 
 
 async function getGeminiResponse(prompt: string) {
