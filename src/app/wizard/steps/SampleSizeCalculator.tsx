@@ -5,8 +5,6 @@ import AISuggestion from '../AISuggestion';
 import Tooltip from '../Tooltip';
 import { getSampleSizeSuggestion } from '../../../services/aiSuggestionService';
 
-// This component demonstrates how AI assistance would enhance the existing sample size calculation
-// in experiments-engine while maintaining the current functionality
 export default function SampleSizeCalculator({ goToNext }) {
   // In actual integration, we would use the Zustand store pattern from experiments-engine:
   // const { experimentState, updateSampleSize, updatePowerCalculation } = useExperimentStore();

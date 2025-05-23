@@ -81,6 +81,7 @@ export default function AISuggestion({
           {/* Explanation toggle button */}
           <div className="mt-3 flex items-center">
             <button 
+              type="button"
               className="flex items-center text-xs text-blue-400 hover:text-blue-300 group"
               onClick={() => setExpanded(!expanded)}
               aria-expanded={expanded}
